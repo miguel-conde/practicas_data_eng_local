@@ -6,7 +6,16 @@ from dotenv import load_dotenv
 
 load_dotenv("../config/.env")
 
+# Abstact class
 class DLManager:
+    
+    def get_csv(self, object_name):
+        raise NotImplementedError
+    
+    def put_csv(self, df, object_name):
+        raise NotImplementedError
+
+class MinioDLManager(DLManager):
     
     def __init__(self, secure=False):
         # Credenciales MinIO

@@ -1,4 +1,4 @@
-from dl_manager import DLManager
+from de_lib.cleaning_manager import CleaningManager
 
 def clean_kaggle_diabetes_dataset(df):
     # --------- Limpieza del dataset (tu lógica aquí) ---------
@@ -24,29 +24,7 @@ def clean_kaggle_diabetes_dataset(df):
     df_clean["Outcome"] = df_clean["Outcome"].astype(bool)
     
     return df_clean
-
-def clean_process(cleaning_list):
-    
-    dl_manager = DLManager()
-    
-    for cleaning_info in cleaning_list:
-        raw_object_name   = cleaning_info["raw_object_name"]
-        clean_object_name = cleaning_info["clean_object_name"]
-        cleaning_function = cleaning_info["cleaning_function"]
-    
-        # Lee el CSV desde MinIO (raw)
-        raw_object_name = raw_object_name
-        df = dl_manager.get_csv(raw_object_name)
-        
-        # Data cleaning
-        df_clean = cleaning_function(df)
-        
-        # Guarda el resultado limpio en MinIO (clean)
-        dl_manager.put_csv(df_clean, clean_object_name)
-        
-        print(f"Dataset limpio guardado correctamente en MinIO: {clean_object_name}")
-    
-      
+   
 if __name__ == "__main__":
     
     cleaning_list = [
@@ -57,5 +35,7 @@ if __name__ == "__main__":
         }
     ]
     
-    clean_process(cleaning_list = cleaning_list)
+    cleaning_manager = CleaningManager()
+    
+    cleaning_manager.clean_process(cleaning_list = cleaning_list)
     
