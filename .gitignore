@@ -2,3 +2,4 @@
 /.venv
 /data
 credentials_minio.json
+cleaning/__pycache__/*
