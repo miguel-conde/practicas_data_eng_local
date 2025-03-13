@@ -4,21 +4,11 @@ from dotenv import load_dotenv
 from minio import Minio
 from kaggle.api.kaggle_api_extended import KaggleApi
 
+from de_lib.dl_manager import MinioDLManager
+
+dl_manager = MinioDLManager()
+
 load_dotenv("../config/.env")
-
-# Carga credenciales MinIO
-MINIO_ENDPOINT = os.getenv('MINIO_ENDPOINT')
-MINIO_ACCESS_KEY = os.getenv('MINIO_ACCESS_KEY')
-MINIO_SECRET_KEY = os.getenv('MINIO_SECRET_KEY')
-MINIO_BUCKET = os.getenv('MINIO_BUCKET')
-
-# Conecta con MinIO
-client = Minio(
-    MINIO_ENDPOINT,
-    access_key=MINIO_ACCESS_KEY,
-    secret_key=MINIO_SECRET_KEY,
-    secure=False  # cambia a True si usas https
-)
 
 # Configura y autentica Kaggle API
 api = KaggleApi()
@@ -36,11 +26,7 @@ for file_name in os.listdir(download_path):
     file_path = os.path.join(download_path, file_name)
     minio_path = f"raw/diabetes_dataset/{file_name}"
 
-    client.fput_object(
-        bucket_name=MINIO_BUCKET,
-        object_name=minio_path,
-        file_path=file_path
-    )
+    dl_manager.put_csv(file_path, minio_path)
     print(f"Archivo subido a MinIO: {minio_path}")
     
 # Limpieza de archivos temporales
