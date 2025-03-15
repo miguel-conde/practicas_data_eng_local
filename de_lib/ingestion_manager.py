@@ -1,10 +1,7 @@
 import os
-from dotenv import load_dotenv
 from kaggle.api.kaggle_api_extended import KaggleApi
-from de_lib.tracer import tracer
+from .tracer import tracer
 import requests
-
-load_dotenv("../config/.env")
 
 
 class IngestionManager():
@@ -43,7 +40,7 @@ class URIIngestionManager(IngestionManager):
             raise
         
 class IngestionManagerFactory():
-    def get_ingestion_manager(self, ingestion_type: str['uri', 'kaggle']):
+    def get_ingestion_manager(self, ingestion_type: str):
         try:
             tracer.info(f"Creating ingestion manager for type: {ingestion_type}")
             if ingestion_type == "kaggle":

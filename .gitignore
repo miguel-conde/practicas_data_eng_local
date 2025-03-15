@@ -1,6 +1,8 @@
 /.env
 /.venv
 credentials_minio.json
-cleaning/__pycache__/
 de_lib/__pycache__/
 de_lib.egg-info/
+application.log
+2_cleaning/__pycache__/*
+1_ingestion/__pycache__/*

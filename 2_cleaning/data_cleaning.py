@@ -1,4 +1,8 @@
+from dotenv import find_dotenv, load_dotenv
+
 from de_lib.cleaning_manager import CleaningManager
+
+load_dotenv(find_dotenv())
 
 def clean_kaggle_diabetes_dataset(df):
     # --------- Limpieza del dataset (tu lógica aquí) ---------

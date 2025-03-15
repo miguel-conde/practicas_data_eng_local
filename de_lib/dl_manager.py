@@ -2,11 +2,8 @@ import os
 import pandas as pd
 from minio import Minio
 from io import BytesIO
-from dotenv import load_dotenv
 from pathlib import Path
-from tracer import tracer
-
-load_dotenv("../config/.env")
+from .tracer import tracer
 
 # Abstact class
 class DLManager:
@@ -53,6 +50,16 @@ class MinioDLManager(DLManager):
             data         = csv_buffer, 
             length       = len(csv_buffer.getvalue()), 
             content_type = 'application/csv'
+            )
+        
+    def put_file(self, file_path, object_name):
+        with open(file_path, 'rb') as file_data:
+            self.client.put_object(
+                bucket_name = self._minio_bucket,
+                object_name = object_name,
+                data        = file_data,
+                length      = os.stat(file_path).st_size,
+                content_type = 'application/csv'
             )
         
     def file_exists(self, object_name):
