@@ -12,10 +12,10 @@ import os
 
 
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 # Load .env file
-loaded = load_dotenv(verbose=True)
+loaded = load_dotenv(find_dotenv(), verbose=True)
 
 # print(f"El valor de la variable de entorno LOG_LEVEL es: {get_env_variable('LOG_LVL')}")
 
