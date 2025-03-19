@@ -4,12 +4,12 @@ from .tracer import tracer
 import requests
 
 
-class IngestionManager():
+class IngestionManagerBase():
     def download_dataset(self, dataset, download_path):
         raise NotImplementedError
 
 
-class KaggleIngestionManager(IngestionManager):
+class KaggleIngestionManager(IngestionManagerBase):
     def __init__(self):
         self.api = KaggleApi()
         self.api.authenticate()
@@ -23,7 +23,7 @@ class KaggleIngestionManager(IngestionManager):
             tracer.error(e)
             raise
         
-class URIIngestionManager(IngestionManager):
+class URIIngestionManager(IngestionManagerBase):
     def __init__(self):
         pass
 
@@ -39,7 +39,7 @@ class URIIngestionManager(IngestionManager):
             tracer.error(e)
             raise
         
-class IngestionManagerFactory():
+class IngestionManager():
     def get_ingestion_manager(self, ingestion_type: str):
         try:
             tracer.info(f"Creating ingestion manager for type: {ingestion_type}")
