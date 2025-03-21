@@ -6,7 +6,7 @@ from pathlib import Path
 from .tracer import tracer
 
 # Abstact class
-class DLManager:
+class DLManagerBase:
     
     def get_csv(self, object_name):
         raise NotImplementedError
@@ -17,7 +17,7 @@ class DLManager:
     def file_exists(self, object_name):
         raise NotImplementedError
 
-class MinioDLManager(DLManager):
+class MinioDLManager(DLManagerBase):
     
     def __init__(self, secure=False):
         # Credenciales MinIO
@@ -69,7 +69,7 @@ class MinioDLManager(DLManager):
         except Exception as e:
             return False    
         
-class LocalFolderDLManager(DLManager):
+class LocalFolderDLManager(DLManagerBase):
     
     def __init__(self, folder_path):
         self.folder_path = folder_path
@@ -100,7 +100,7 @@ class LocalFolderDLManager(DLManager):
         file_path = os.path.join(self.folder_path, object_name)
         return os.path.exists(file_path)
         
-class DLManagerFactory:
+class DLManager:
     
     @staticmethod
     def create_dl_manager(manager_type, **kwargs):
