@@ -186,8 +186,10 @@ class SQLiteManager(DWManagerBase):
 
 
 # Factory class to create the appropriate DWManager
-class DWManager():
-    def get_dw_manager(self, dw_type: str):
+class DWManager:
+    
+    @staticmethod
+    def create_dw_manager(dw_type: str):
         try:
             tracer.info(f"Creating DW manager for type: {dw_type}")
             if dw_type == "postgres":
@@ -202,7 +204,7 @@ class DWManager():
         
 if __name__ == "__main__":
     
-    dw_manager = DWManager().get_dw_manager("postgres")
+    dw_manager = DWManager.create_dw_manager("postgres")
     dw_manager.connect()
     dw_manager.execute_query("SELECT * FROM information_schema.tables")
     

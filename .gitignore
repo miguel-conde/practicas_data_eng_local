@@ -6,3 +6,4 @@ de_lib.egg-info/
 application.log
 2_cleaning/__pycache__/*
 1_ingestion/__pycache__/*
+tests/__pycache__/*

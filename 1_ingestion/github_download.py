@@ -10,24 +10,24 @@ load_dotenv(find_dotenv())
 
 
 def download_github_dataset(file, download_path, minio_path):
-    tracer.info(f"Descargando dataset {file} a {download_path}")
+    tracer.info(f"Downloading dataset {file} to {download_path}")
     
     os.makedirs(download_path, exist_ok=True)
     uri_ingestion_manager.download_dataset(file, download_path)
 
-    # Sube archivos descargados a MinIO (RAW)
+    # Upload downloaded files to MinIO (RAW)
     for file_name in os.listdir(download_path):
         file_path = os.path.join(download_path, file_name)
         minio_path = os.path.join(minio_path, file_name)
 
         dl_manager.put_file(file_path, minio_path)
-        tracer.info(f"Archivo subido a MinIO: {minio_path}")
+        tracer.info(f"File uploaded to MinIO: {minio_path}")
         
-    # Limpieza de archivos temporales
+    # Clean up temporary files
     shutil.rmtree(download_path)
-    tracer.info(f"Carpeta temporal '{download_path}' borrada correctamente.")
+    tracer.info(f"Temporary folder '{download_path}' deleted successfully.")
 
-    tracer.info("Proceso terminado correctamente.")
+    tracer.info("Process completed successfully.")
 
 if __name__ == "__main__":
     uri_ingestion_manager = URIIngestionManager()
@@ -44,4 +44,4 @@ if __name__ == "__main__":
     for dataset in download_list:
         download_github_dataset(dataset['file'], dataset['download_path'], dataset['minio_path']) 
         
-    tracer.info("Proceso terminado correctamente.")
+    tracer.info("Process completed successfully.")

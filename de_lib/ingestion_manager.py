@@ -50,5 +50,5 @@ class IngestionManager():
             else:
                 raise ValueError(f"Invalid ingestion type: {ingestion_type}")
         except Exception as e:
-            tracer.log_exception(e)
+            tracer.error(e)
             raise

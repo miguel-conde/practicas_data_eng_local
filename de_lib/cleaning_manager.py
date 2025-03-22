@@ -1,4 +1,5 @@
 from .dl_manager import DLManager, MinioDLManager
+from .tracer import tracer
 
 class CleaningManager:
     
@@ -21,4 +22,4 @@ class CleaningManager:
             # Guarda el resultado limpio en Data Lake (clean)
             self.dl_manager.put_csv(df_clean, clean_object_name)
             
-            print(f"Dataset limpio guardado correctamente en MinIO: {clean_object_name}")
+            tracer.info(f"Clean dataset successfully saved in MinIO: {clean_object_name}")
