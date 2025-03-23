@@ -9,11 +9,14 @@ from de_lib.tracer import tracer
 class DWManagerBase():
     def connect(self):
         raise NotImplementedError
-    
+        
     def execute_query(self, query, params=None):
         try:
             tracer.info(f"Executing query: {query}")
-            self.cursor.execute(query, params)
+            if params is not None:
+                self.cursor.execute(query, params)
+            else:
+                self.cursor.execute(query)
             self.conn.commit()
         except Exception as e:
             tracer.error(e)
@@ -22,7 +25,10 @@ class DWManagerBase():
     def fetch_data(self, query, params=None):
         try:
             tracer.info(f"Fetching data from query: {query}")
-            self.cursor.execute(query, params)
+            if params is not None:
+                self.cursor.execute(query, params)
+            else:
+                self.cursor.execute(query)
             return self.cursor.fetchall()
         except Exception as e:
             tracer.error(e)
@@ -42,7 +48,6 @@ class DWManagerBase():
 
     def close(self):
         try:
-            tracer.info(f"Closing DB connection (db: {self.db_name}) host: {self.db_host}, user: {self.db_user})")
             if self.cursor:
                 self.cursor.close()
             if self.conn:
@@ -77,6 +82,11 @@ class PGManager(DWManagerBase):
         except Exception as e:
             tracer.error(e)
             raise
+        
+    def close(self):
+        tracer.info(f"Closing DB connection (db: {self.db_name}) host: {self.db_host}, user: {self.db_user})")
+        
+        super().close()
 
 
 class SQLiteManager(DWManagerBase):
@@ -93,6 +103,11 @@ class SQLiteManager(DWManagerBase):
         except Exception as e:
             tracer.error(e)
             raise
+        
+    def close(self):
+        tracer.info(f"Closing DB connection (db: {self.db_path})")
+        
+        super().close()
         
 # Factory class to create the appropriate DWManager
 class DWManager:
@@ -121,10 +136,10 @@ if __name__ == "__main__":
     
     dw_manager.close()
     
-    # dw_manager = DWManager().get_dw_manager("sqlite")
-    # dw_manager.connect()
-    # dw_manager.execute_query("SELECT * FROM sqlite_master")
+    dw_manager = DWManager.create_dw_manager("sqlite")
+    dw_manager.connect()
+    dw_manager.execute_query("SELECT * FROM sqlite_master")
     
-    # print(dw_manager.fetch_data("SELECT * FROM sqlite_master"))
+    print(dw_manager.fetch_data("SELECT * FROM sqlite_master"))
     
-    # dw_manager.close()
+    dw_manager.close()
