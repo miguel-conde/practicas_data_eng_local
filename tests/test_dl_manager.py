@@ -24,9 +24,10 @@ class TestMinioDLManager(unittest.TestCase):
             manager.put_csv(df, 'object_name')
             mock_client.put_object.assert_called_once()
 
-    @patch('de_lib.dl_manager.Minio')
-    @patch('os.path.exists', return_value=True)
+    
     @patch('os.stat')
+    @patch('os.path.exists', return_value=True)
+    @patch('de_lib.dl_manager.Minio')
     def test_put_file(self, MockMinio, mock_exists, mock_stat):
         mock_client = MockMinio.return_value
         mock_stat.return_value.st_size = 123  # Mock the file size
