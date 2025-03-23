@@ -92,16 +92,20 @@ class MinioDLManager(DLManagerBase):
             df (pandas.DataFrame): The DataFrame to be uploaded.
             object_name (str): The name of the object to be created in the bucket.
         """
-        csv_buffer = BytesIO()
-        df.to_csv(csv_buffer, index=False)
-        csv_buffer.seek(0)
-        self.client.put_object(
+        try:
+            csv_buffer = BytesIO()
+            df.to_csv(csv_buffer, index=False)
+            csv_buffer.seek(0)
+            self.client.put_object(
             bucket_name  = self._minio_bucket, 
             object_name  = object_name, 
             data         = csv_buffer, 
             length       = len(csv_buffer.getvalue()), 
             content_type = 'application/csv'
             )
+        except Exception as e:
+            tracer.error(f"Error uploading CSV file: {object_name}, Error: {e}")
+            raise
         
     def put_file(self, file_path: str, object_name: str):
         """Uploads a file to the specified MinIO bucket.
@@ -109,14 +113,18 @@ class MinioDLManager(DLManagerBase):
             file_path (str): The path to the file to be uploaded.
             object_name (str): The name of the object to be created in the bucket.
         """
-        with open(file_path, 'rb') as file_data:
-            self.client.put_object(
-                bucket_name = self._minio_bucket,
-                object_name = object_name,
-                data        = file_data,
-                length      = os.stat(file_path).st_size,
-                content_type = 'application/csv'
+        try:
+            with open(file_path, 'rb') as file_data:
+                self.client.put_object(
+                    bucket_name = self._minio_bucket,
+                    object_name = object_name,
+                    data        = file_data,
+                    length      = os.stat(file_path).st_size,
+                    content_type = 'application/csv'
             )
+        except Exception as e:
+            tracer.error(f"Error uploading file: {file_path} to {object_name}, Error: {e}")
+            raise
         
     def file_exists(self, object_name: str) -> bool:
         """

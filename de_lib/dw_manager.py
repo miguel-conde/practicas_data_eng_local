@@ -9,15 +9,7 @@ from de_lib.tracer import tracer
 class DWManagerBase():
     def connect(self):
         raise NotImplementedError
-
-    # def execute_query(self, query, params=None):
-    #     raise NotImplementedError
-
-    # def fetch_data(self, query, params=None):
-    #     raise NotImplementedError
-
-    # def close(self):
-    #     raise NotImplementedError
+    
     def execute_query(self, query, params=None):
         try:
             tracer.info(f"Executing query: {query}")
@@ -86,47 +78,6 @@ class PGManager(DWManagerBase):
             tracer.error(e)
             raise
 
-    # def execute_query(self, query, params=None):
-    #     try:
-    #         tracer.info(f"Executing query: {query}")
-    #         self.cursor.execute(query, params)
-    #         self.conn.commit()
-    #     except Exception as e:
-    #         tracer.error(e)
-    #         raise
-
-    # def fetch_data(self, query, params=None):
-    #     try:
-    #         tracer.info(f"Fetching data from query: {query}")
-    #         self.cursor.execute(query, params)
-    #         return self.cursor.fetchall()
-    #     except Exception as e:
-    #         tracer.error(e)
-    #         raise
-        
-    # def copy_from_csv(self, copy_query, df_clean):
-    #     try:
-    #         # Guardar DataFrame temporalmente en memoria
-    #         csv_buffer = BytesIO()
-    #         df_clean.to_csv(csv_buffer, index=False, header=False)
-    #         csv_buffer.seek(0)
-    #         self.cursor.copy_expert(copy_query, csv_buffer)
-    #         self.conn.commit()
-    #     except Exception as e:
-    #         tracer.error(e)
-    #         raise
-
-    # def close(self):
-    #     try:
-    #         tracer.info(f"Closing PostgreSQL connection (db: {self.db_name}) host: {self.db_host}, user: {self.db_user})")
-    #         if self.cursor:
-    #             self.cursor.close()
-    #         if self.conn:
-    #             self.conn.close()
-    #     except Exception as e:
-    #         tracer.error(e)
-    #         raise
-
 
 class SQLiteManager(DWManagerBase):
     def __init__(self, db_path):
@@ -142,49 +93,7 @@ class SQLiteManager(DWManagerBase):
         except Exception as e:
             tracer.error(e)
             raise
-
-    # def execute_query(self, query, params=None):
-    #     try:
-    #         tracer.info(f"Executing query: {query}")
-    #         self.cursor.execute(query, params)
-    #         self.conn.commit()
-    #     except Exception as e:
-    #         tracer.error(e)
-    #         raise
-
-    # def fetch_data(self, query, params=None):
-    #     try:
-    #         tracer.info(f"Fetching data from query: {query}")
-    #         self.cursor.execute(query, params)
-    #         return self.cursor.fetchall()
-    #     except Exception as e:
-    #         tracer.error(e)
-    #         raise
         
-    # def copy_from_csv(self, copy_query, df_clean):
-    #     try:
-    #         # Guardar DataFrame temporalmente en memoria
-    #         csv_buffer = BytesIO()
-    #         df_clean.to_csv(csv_buffer, index=False, header=False)
-    #         csv_buffer.seek(0)
-    #         self.cursor.copy_expert(copy_query, csv_buffer)
-    #         self.conn.commit()
-    #     except Exception as e:
-    #         tracer.error(e)
-    #         raise
-
-    # def close(self):
-    #     try:
-    #         tracer.info(f"Closing SQLite connection: {self.db_path}")
-    #         if self.cursor:
-    #             self.cursor.close()
-    #         if self.conn:
-    #             self.conn.close()
-    #     except Exception as e:
-    #         tracer.error(e)
-    #         raise
-
-
 # Factory class to create the appropriate DWManager
 class DWManager:
     
